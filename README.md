@@ -2,7 +2,7 @@
 
 ## Descripción
 
-Around The U.S. es una aplicación web interactiva desarrollada como parte del Sprint 6 del bootcamp de TripleTen. El proyecto permite al usuario editar la información de su perfil, crear nuevas tarjetas con imágenes, dar "Me gusta", eliminar tarjetas y visualizar las imágenes en un modal con un tamaño ampliado.
+Around The U.S. es una pagina web interactiva, desarrollada como parte del proyecto final del Sprint 6. El proyecto permite al usuario editar la información de su perfil, crear nuevas tarjetas con imágenes, dar "Me gusta", eliminar tarjetas y visualizar las imágenes en un modal con un tamaño ampliado.
 
 ## Funcionalidades
 
