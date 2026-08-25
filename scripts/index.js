@@ -1,3 +1,9 @@
+import {
+  checkFormValidity,
+  checkCardFormValidity,
+  resetValidation,
+} from "./validate.js";
+
 const initialCards = [
   {
     name: "Valle de Yosemite",
@@ -35,6 +41,7 @@ const newCardCloseButton = newCardPopup.querySelector(".popup__close");
 
 const cardNameInput = newCardForm.querySelector(".popup__input_type_card-name");
 const cardLinkInput = newCardForm.querySelector(".popup__input_type_url");
+const cardSubmitButton = newCardForm.querySelector(".popup__button");
 
 const imagePopup = document.querySelector("#image-popup");
 const popupImage = imagePopup.querySelector(".popup__image");
@@ -52,27 +59,8 @@ const descriptionInput = document.querySelector(
 );
 const formElement = document.querySelector("#edit-profile-form");
 
-addButton.addEventListener("click", () => {
-  openModal(newCardPopup);
-});
-
-newCardCloseButton.addEventListener("click", () => {
-  closeModal(newCardPopup);
-});
-
-closeButton.addEventListener("click", () => {
-  closeModal(editPopup);
-});
-
-editButton.addEventListener("click", handleOpenEditModal);
-
-formElement.addEventListener("submit", handleProfileFormSubmit);
-
-imagePopupCloseButton.addEventListener("click", () => {
-  closeModal(imagePopup);
-});
-
-newCardForm.addEventListener("submit", handleCardFormSubmit);
+const nameError = nameInput.nextElementSibling;
+const descriptionError = descriptionInput.nextElementSibling;
 
 function getCardElement({
   name = "Sin título",
@@ -131,10 +119,12 @@ function handleCardFormSubmit(evt) {
 
 function openModal(modal) {
   modal.classList.add("popup_is-opened");
+  document.addEventListener("keydown", handleEscapeKey);
 }
 
 function closeModal(modal) {
   modal.classList.remove("popup_is-opened");
+  document.removeEventListener("keydown", handleEscapeKey);
 }
 
 function fillProfileForm() {
@@ -143,7 +133,9 @@ function fillProfileForm() {
 }
 
 function handleOpenEditModal() {
+  resetValidation(formElement, submitButton);
   fillProfileForm();
+  handleProfileFormInput();
   openModal(editPopup);
 }
 
@@ -152,8 +144,93 @@ function handleProfileFormSubmit(evt) {
   profileTitle.textContent = nameInput.value;
   profileDescription.textContent = descriptionInput.value;
   closeModal(editPopup);
+  resetValidation(formElement, submitButton);
 }
 
 initialCards.forEach((card) => {
   renderCard(card);
 });
+
+const submitButton = formElement.querySelector(".popup__button");
+
+checkCardFormValidity(cardNameInput, cardLinkInput, cardSubmitButton);
+
+function setEventListeners() {
+  addButton.addEventListener("click", () => {
+    openModal(newCardPopup);
+  });
+
+  newCardCloseButton.addEventListener("click", () => {
+    closeModal(newCardPopup);
+    newCardForm.reset();
+  });
+
+  closeButton.addEventListener("click", () => {
+    closeModal(editPopup);
+    resetValidation(formElement, submitButton);
+  });
+
+  imagePopupCloseButton.addEventListener("click", () => {
+    closeModal(imagePopup);
+  });
+
+  newCardForm.addEventListener("submit", handleCardFormSubmit);
+  editButton.addEventListener("click", handleOpenEditModal);
+  formElement.addEventListener("submit", handleProfileFormSubmit);
+
+  cardNameInput.addEventListener("input", handleCardFormInput);
+  cardLinkInput.addEventListener("input", handleCardFormInput);
+
+  nameInput.addEventListener("input", handleProfileFormInput);
+  descriptionInput.addEventListener("input", handleProfileFormInput);
+
+  imagePopup.addEventListener("click", (evt) => {
+    if (evt.target === imagePopup) {
+      closeModal(imagePopup);
+    }
+  });
+
+  editPopup.addEventListener("click", (evt) => {
+    if (evt.target === editPopup) {
+      closeModal(editPopup);
+      resetValidation(formElement, submitButton);
+    }
+  });
+
+  newCardPopup.addEventListener("click", (evt) => {
+    if (evt.target === newCardPopup) {
+      closeModal(newCardPopup);
+      newCardForm.reset();
+    }
+  });
+}
+function handleEscapeKey(evt) {
+  if (evt.key === "Escape") {
+    const openedPopup = document.querySelector(".popup_is-opened");
+    if (openedPopup) {
+      if (openedPopup === editPopup) {
+        resetValidation(formElement, submitButton);
+      }
+      if (openedPopup === newCardPopup) {
+        newCardForm.reset();
+      }
+      closeModal(openedPopup);
+    }
+  }
+}
+
+function handleCardFormInput() {
+  checkCardFormValidity(cardNameInput, cardLinkInput, cardSubmitButton);
+}
+
+function handleProfileFormInput() {
+  checkFormValidity(
+    nameInput,
+    descriptionInput,
+    submitButton,
+    nameError,
+    descriptionError,
+  );
+}
+
+setEventListeners();
