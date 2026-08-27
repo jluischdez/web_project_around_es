@@ -1,29 +1,29 @@
-export function checkFormValidity(
-  nameInput,
-  descriptionInput,
-  submitButton,
-  nameError,
-  descriptionError,
-) {
-  const isFormValid =
-    checkinputValidity(nameInput) && checkinputValidity(descriptionInput);
-  submitButton.disabled = !isFormValid;
-  nameError.textContent = nameInput.validationMessage;
-  descriptionError.textContent = descriptionInput.validationMessage;
-}
-
-export function checkCardFormValidity(
-  cardNameInput,
-  cardLinkInput,
-  cardSubmitButton,
-) {
-  const isCardFormValid =
-    checkinputValidity(cardNameInput) && checkinputValidity(cardLinkInput);
-  cardSubmitButton.disabled = !isCardFormValid;
-}
-
-export function checkinputValidity(input) {
+export function checkInputValidity(input) {
   return input.validity.valid;
+}
+
+export function checkFormValidity(inputList, buttonElement) {
+  const isFormValid = inputList.every((input) => checkInputValidity(input));
+  inputList.forEach((input) => {
+    const errorElement = input.nextElementSibling;
+    if (errorElement) {
+      errorElement.textContent = input.validationMessage;
+    }
+  });
+  buttonElement.disabled = !isFormValid;
+}
+
+export function setEventListeners(formElement) {
+  const inputList = Array.from(formElement.querySelectorAll("input"));
+  const buttonElement = formElement.querySelector(".popup__button");
+
+  checkFormValidity(inputList, buttonElement);
+
+  inputList.forEach((input) => {
+    input.addEventListener("input", () => {
+      checkFormValidity(inputList, buttonElement);
+    });
+  });
 }
 
 export function resetValidation(form, submitButton) {
