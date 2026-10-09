@@ -1,10 +1,12 @@
 import { Popup } from "./Popup.js";
 
-type FormSubmitCallback = (formData: Record<string, string>) => void;
+type FormSubmitCallback = (formData: Record<string, string>) => void | Promise<void>;
 
 export class PopupWithForm extends Popup {
   private _formElement: HTMLFormElement;
   private _submitCallback: FormSubmitCallback;
+  private _submitButton: HTMLButtonElement;
+  private _submitButtonText: string;
 
   constructor(selector: string, submitCallback: FormSubmitCallback) {
     super(selector);
@@ -12,8 +14,12 @@ export class PopupWithForm extends Popup {
     this._formElement = this._popupElement.querySelector(
       ".popup__form"
     ) as HTMLFormElement;
+    this._submitButton = this._formElement.querySelector(
+  ".popup__button"
+) as HTMLButtonElement;
 
     this._submitCallback = submitCallback;
+    this._submitButtonText = this._submitButton.textContent || "";
 
   }
 
@@ -32,14 +38,21 @@ export class PopupWithForm extends Popup {
   setEventListeners(): void {
     super.setEventListeners();
 
-    this._formElement.addEventListener("submit", (event: SubmitEvent) => {
+    this._formElement.addEventListener("submit", async (event: SubmitEvent) => {
       event.preventDefault();
 
       const formData = this.getInputValues();
 
-      this._submitCallback(formData);
+      this._submitButton.textContent = "Guardando...";
 
-      this.close();
+try {
+  await this._submitCallback(formData);
+  this.close();
+} catch (err) {
+  console.error(err);
+} finally {
+  this._submitButton.textContent = this._submitButtonText;
+}
     });
   }
 

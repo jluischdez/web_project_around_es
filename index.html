@@ -5,6 +5,7 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <meta content="ie=edge" http-equiv="X-UA-Compatible" />
     <title>Around The U.S.</title>
+    <link rel="icon" href="./images/logo.svg" type="image/svg+xml" />
     <link href="./pages/index.css" rel="stylesheet" />
   </head>
   <body class="page">
@@ -18,7 +19,19 @@
       </header>
       <main class="content">
         <section class="profile page__section">
-          <img class="profile__image" src="./images/avatar.jpg" alt="Avatar" />
+          <div class="profile__image-container">
+            <button
+              class="profile__avatar-edit"
+              type="button"
+              aria-label="Editar avatar"
+            ></button>
+            <img
+              class="profile__image"
+              src="./images/avatar.jpg"
+              alt="Avatar"
+            />
+          </div>
+
           <div class="profile__info">
             <h1 class="profile__title">Jacques Cousteau</h1>
             <button
@@ -92,6 +105,31 @@
           </form>
         </div>
       </div>
+      <div class="popup" id="avatar-popup">
+        <div class="popup__content">
+          <button
+            aria-label="Cerrar ventana emergente"
+            class="popup__close"
+            type="button"
+          ></button>
+
+          <h3 class="popup__title">Cambiar foto de perfil</h3>
+
+          <form class="popup__form" id="avatar-form">
+            <input
+              required
+              class="popup__input popup__input_type_url"
+              name="avatar"
+              placeholder="Enlace a la imagen"
+              type="url"
+            />
+
+            <span class="popup__error"></span>
+
+            <button class="button popup__button" type="submit">Guardar</button>
+          </form>
+        </div>
+      </div>
       <div class="popup" id="new-card-popup">
         <div class="popup__content">
           <button
@@ -132,6 +170,21 @@
           ></button>
           <img alt="" class="popup__image" src="#" />
           <p class="popup__caption"></p>
+        </div>
+      </div>
+      <div class="popup" id="confirmation-popup">
+        <div class="popup__content">
+          <button
+            aria-label="Cerrar ventana emergente"
+            class="popup__close"
+            type="button"
+          ></button>
+
+          <h3 class="popup__title">¿Estás seguro?</h3>
+
+          <form class="popup__form">
+            <button class="button popup__button" type="submit">Sí</button>
+          </form>
         </div>
       </div>
     </div>
