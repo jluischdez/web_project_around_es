@@ -77,6 +77,7 @@ const avatarPopup = new PopupWithForm(
 avatarPopup.setEventListeners();
 
 avatarEditButton.addEventListener("click", () => {
+  avatarFormValidator.resetValidation();
   avatarPopup.open();
 });
 
@@ -187,8 +188,6 @@ async function handleProfileFormSubmit(
       about: user.about,
       avatar: user.avatar,
     });
-
-    editFormValidator.resetValidation();
   } catch (err) {
     console.error(err);
     throw err;
@@ -218,6 +217,7 @@ function openEditProfilePopup(): void {
 }
 
 addButton.addEventListener("click", () => {
+  newCardFormValidator.resetValidation();
   newCardPopup.open();
 });
 
@@ -261,7 +261,12 @@ async function loadData(): Promise<void>{
       avatar: user.avatar,
     });
 
-    cardSection.setItem(cards);
+    const sortedCards = [...cards].sort(
+      (a, b) =>
+        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+    );
+
+    cardSection.setItem(sortedCards);
     cardSection.render();
   } catch (err) {
     console.error(err);

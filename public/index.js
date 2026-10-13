@@ -51,6 +51,7 @@ function handleAvatarFormSubmit(formData) {
 const avatarPopup = new PopupWithForm("#avatar-popup", handleAvatarFormSubmit);
 avatarPopup.setEventListeners();
 avatarEditButton.addEventListener("click", () => {
+    avatarFormValidator.resetValidation();
     avatarPopup.open();
 });
 const confirmationPopup = new PopupWithConfirmation("#confirmation-popup", () => { });
@@ -122,7 +123,6 @@ function handleProfileFormSubmit(formData) {
                 about: user.about,
                 avatar: user.avatar,
             });
-            editFormValidator.resetValidation();
         }
         catch (err) {
             console.error(err);
@@ -143,6 +143,7 @@ function openEditProfilePopup() {
     editPopup.open();
 }
 addButton.addEventListener("click", () => {
+    newCardFormValidator.resetValidation();
     newCardPopup.open();
 });
 editButton.addEventListener("click", openEditProfilePopup);
@@ -166,7 +167,8 @@ function loadData() {
                 about: user.about,
                 avatar: user.avatar,
             });
-            cardSection.setItem(cards);
+            const sortedCards = [...cards].sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+            cardSection.setItem(sortedCards);
             cardSection.render();
         }
         catch (err) {
